@@ -1,0 +1,102 @@
+body {}
+
+.login-form {
+  max-width: 360px;
+  margin-top: 20px;
+  margin-left: 0px;
+  padding: 26px 24px 10px 26px;
+  background: rgb(255, 255, 255);
+
+  -moz-border-radius: 15px;
+  /* Firefox */
+  -webkit-border-radius: 15px;
+  /* Safari & Chrome */
+  border-radius: 15px;
+  /* Opera 10.5+, IE-CSS3 */
+
+  -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.13);
+  /* Firefox */
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.13)000;
+  /* Safari & Chrome */
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.13)000;
+  /* Opera 10.5+, IE-CSS3 */
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.login-bg {
+  height: 100vh;
+  padding-top: 10%;
+  background: url('./../img/logo-for-bg.png') no-repeat right bottom #eee;
+}
+
+.login-bg .login-form {
+  margin: 0 auto;
+}
+
+.login-error-message {
+  clear: both;
+}
+
+.signin-logo {
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+.signin-logo h2 {
+  font-size: 30px;
+  padding-top: 10px;
+  color: #ec5e48;
+  text-transform: uppercase;
+}
+
+.ant-btn-primary {
+  color: #fff;
+  background-color: #ec5e48;
+  border-color: #ec5e48;
+}
+
+.ant-btn-primary:hover {
+  color: #fff;
+  background-color: #ec5e48;
+  border-color: #ec5e48;
+}
+
+.ant-btn-primary:active {
+  color: #fff;
+  background-color: #ec5e48;
+  border-color: #ec5e48;
+}
+
+.ant-btn-primary:focus {
+  color: #fff;
+  background-color: #ec5e48;
+  border-color: #ec5e48;
+}
+
+.back-home-btn {
+  line-height: 32px !important;
+  margin-top: 10px;
+}
+
+:host ::ng-deep .auto-logout-message {
+  border: 1px #cdffe9 solid;
+  background: #e5fff4;
+  padding: 10px;
+  line-height: 1.4;
+}
+
+:host ::ng-deep .auto-logout-message p {
+  padding: 5px 0 5px 0;
+}
+
+:host ::ng-deep .auto-logout-message h4 {
+  padding: 0;
+  margin: 0;
+}
