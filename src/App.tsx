@@ -1,9 +1,13 @@
 import './App.css';
-import Login from './pages/login';
+import SupportItem from './pages/admin-portal/support-items/support-item';
 
 function App() {
   return (
-    <Login></Login>
+    <div>
+  {/* <Login></Login> */}
+    <SupportItem></SupportItem>
+    </div>
+  
   );
 }
 
