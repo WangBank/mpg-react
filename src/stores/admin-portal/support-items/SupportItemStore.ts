@@ -18,7 +18,7 @@ export default class SupportItemStore{
   @observable total = 0;
   @observable error = '';
   @action
-  getSupportItemList = () => {
+  getSupportItemList = (setcolumns:any) => {
     this.models.isLoading = true;
     const opt = {
       page: this.page,
@@ -30,6 +30,15 @@ export default class SupportItemStore{
         runInAction(() => {
           this.models.supportItemList = res.data.data;
           this.total = res.data.total;
+          if (setcolumns != null) {
+            if (res.data.data && res.data.data.length != 0) {
+              let columndata = res.data.data[0]
+              
+              setcolumns(res.data.data);
+            }
+ 
+          }
+         
         });
       }
       else {
@@ -54,7 +63,7 @@ export default class SupportItemStore{
   @action
   updatePage = (page:number) => {
     this.page = page;
-    this.getSupportItemList();
+    this.getSupportItemList(null);
   }
 
 }
