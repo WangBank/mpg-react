@@ -1,38 +1,42 @@
 import {observable,action,runInAction} from 'mobx'
 import { message } from 'antd';
-import BaseStore from './BaseStore';
-import { LocalStorageModel } from '../models/BaseModel';
+import BaseStore from '../../BaseStore';
 
-export default class LoginStore{
+export default class StaffStore{
   baseStore;
   constructor(rootSt:BaseStore) {
     this.baseStore = rootSt;
   }
 
   models = observable({
-    userinfo:null,
-    isLoading:false,
+    StaffList: [],
+    isLoading: false,
   });
 
-  @observable username = '';
-  @observable password = '';
-  @observable error = [];
+  @observable page = 1;
+  @observable page_size = 25;
+  @observable total = 0;
+  @observable error = '';
   @action
-  signin = () => {
+  getStaffList = (setcolumns:any) => {
     this.models.isLoading = true;
     const opt = {
-      username: this.username,
-      password: this.password,
+      page: this.page,
+      page_size: this.page_size,
     }
-    this.baseStore.LoginService.signin(opt).then((res)=>{
+    this.baseStore.StaffService.getStaffList(opt).then((res:any)=>{
       this.models.isLoading = false;
       if(res.ok) {
         runInAction(() => {
-          if(res.ok){
-            this.models.userinfo = res.data.user_info;
-            this.baseStore.ServiceBase.setData(LocalStorageModel.Token,res.data.access_token)
-            window.location.href='/'
+          this.models.StaffList = res.data.data;
+          this.total = res.data.total;
+          if (setcolumns !== null) {
+            if (res.data.data && res.data.data.length !== 0) {
+              setcolumns(res.data.data);
+            }
+ 
           }
+         
         });
       }
       else {
@@ -41,7 +45,7 @@ export default class LoginStore{
           this.error = res.errors;
         });
       }
-    }).catch((res) => {
+    }).catch((res:any) => {
       if(res.response&&res.response.data&&res.response.data.errors) {
         message.error(res.response.data.errors[0].message);
         runInAction(() => {
@@ -54,5 +58,10 @@ export default class LoginStore{
     });
   }
 
+  @action
+  updatePage = (page:number) => {
+    this.page = page;
+    this.getStaffList(null);
+  }
 
 }

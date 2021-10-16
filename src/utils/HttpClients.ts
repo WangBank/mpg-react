@@ -1,5 +1,6 @@
 
 import fetch from 'axios';
+import {LocalStorageModel} from '../models/BaseModel'
 
 export default class ServiceBase {
   baseURL;
@@ -58,12 +59,24 @@ export default class ServiceBase {
       ({ baseURL } = innerConfig);
     }
     var token = this.getToken();
-    const headers =  {
+   
+    if(token){
+      const headers =  {
         'Content-Type': 'application/json',
         Authorization: "Bearer " +token,}
-    return {
-      ...innerConfig, params, baseURL, headers,
-    };
+      return {
+        ...innerConfig, params, baseURL, headers,
+      };
+    }else{
+      const headers =  {
+        'Content-Type': 'application/json',
+      }
+      return {
+        ...innerConfig, params, baseURL, headers,
+      };
+    }
+   
+   
   }
 
   static handleError(base:string, urlPart:string, refParams:any, data:any, e:any, method:string, stack:any) {
@@ -91,6 +104,10 @@ export default class ServiceBase {
   }
 
   getToken() {
-    return localStorage.getItem("token");
+    return localStorage.getItem(LocalStorageModel.Token);
+  }
+
+  setData(key:string,value:any) {
+    return localStorage.setItem(key,value);
   }
 }

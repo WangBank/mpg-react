@@ -1,42 +1,98 @@
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu } from 'antd';
 import { SettingTwoTone } from '@ant-design/icons';
-import { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,withRouter,RouteComponentProps } from 'react-router-dom';
+import '../static/css/layout.css'
+import React from 'react';
 
-const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
-class AdminLayout extends Component{
+interface IAdminLayout extends RouteComponentProps{
+
+}
+
+class AdminLayout extends React.Component<IAdminLayout>{
+  state = {
+    current: 'Dashboard',
+    leftMenu:()=>{
+      return this.LeftMenus_Dashboard;
+    }
+  };
+
+  LeftMenus_Dashboard = (
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={['Dashboard']}
+          defaultOpenKeys={['Dashboard']}
+          style={{ height: '100%', borderRight: 0 }}
+          selectedKeys={['Dashboard']}
+          openKeys={['Dashboard']}
+          forceSubMenuRender={true}
+        >
+        <Menu.Item key="Dashboard" icon={<SettingTwoTone />}>
+          <Link to='/'>DashBoard</Link>
+        </Menu.Item>
+        </Menu>
+  )
+
+  LeftMenus_Settings = (
+            <Menu
+              mode="inline"
+              defaultSelectedKeys={['SupportItems']}
+              defaultOpenKeys={['SupportItems']}
+              style={{ height: '100%', borderRight: 0 }}
+              selectedKeys={['SupportItems']}
+              openKeys={['SupportItems']}
+              forceSubMenuRender={true}
+            >
+            <Menu.Item key="SupportItems" icon={<SettingTwoTone />}>
+              <Link to='/admin/support-items'>Support item</Link>
+            </Menu.Item>
+            <Menu.Item key="Staff" icon={<SettingTwoTone />}>
+              <Link to='/admin/staff'>Staff</Link>
+            </Menu.Item>
+            </Menu>
+)
+
+  handleClick = (e:any) => {
+    console.log(e)
+    switch (e.key) {
+      case 'Dashboard':
+        this.setState({ current: e.key,leftMenu: ()=>{
+          return this.LeftMenus_Dashboard;
+        }});
+        this.props.history.push('/')
+        break;
+    case 'Settings':
+        this.setState({ current: e.key,leftMenu: ()=>{
+          return this.LeftMenus_Settings;
+        }});
+        this.props.history.push('/admin/support-items')
+        break;
+  
+      default:
+        this.setState({ current: e.key,leftMenu: ()=>{
+          return this.LeftMenus_Settings;
+        }});
+        this.props.history.push('/')
+        break;
+    }
+  };
   render(){
+    const { current,leftMenu} = this.state;
     return(
-      <>
       <Layout>
     <Header className="header">
       <div className="logo" />
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['Dashboard']}>
-      <Menu.Item key="Dashboard">Dashboard</Menu.Item>
-      <Menu.Item key="Settings">Settings</Menu.Item>
+      <Menu theme="light" mode="horizontal" onClick={this.handleClick} selectedKeys={[current]} defaultSelectedKeys={['Dashboard']}>
+        <Menu.Item key="Dashboard">Dashboard</Menu.Item>
+        <Menu.Item key="Settings">Settings</Menu.Item>
       </Menu>
     </Header>
     <Layout>
       <Sider width={200} className="site-layout-background">
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={['SupportItems']}
-          defaultOpenKeys={['SupportItems']}
-          style={{ height: '100%', borderRight: 0 }}
-        >
-         <Menu.Item key="SupportItems" icon={<SettingTwoTone />}>
-         <Link to='/admin/support-items'>Support items</Link>
-        </Menu.Item>
-        </Menu>
+        {leftMenu()}
       </Sider>
       <Layout style={{ padding: '0 24px 24px' }}>
-        <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Admin</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>Support items</Breadcrumb.Item>
-        </Breadcrumb>
         <Content
           className="site-layout-background"
           style={{
@@ -50,10 +106,8 @@ class AdminLayout extends Component{
       </Layout>
     </Layout>
   </Layout>
-    
-       </>
       )
   }
 }
 
-export default AdminLayout;
+export default withRouter(AdminLayout);

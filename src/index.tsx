@@ -27,6 +27,10 @@ ReactDOM.render(
       rootStore={rootStore} 
       SupportItemService={rootStore.SupportItemService}
       SupportItemStore={rootStore.SupportItemStore}
+      LoginService={rootStore.LoginService}
+      LoginStore={rootStore.LoginStore}
+      StaffStore={rootStore.StaffStore}
+      StaffService={rootStore.StaffService}
   >
       <ObserverContainer />
   </StoreProvider>,containerDiv );

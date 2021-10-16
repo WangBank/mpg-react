@@ -2,6 +2,7 @@ import { Table, Button, Space } from 'antd';
 import React from 'react';
 import { observer, inject } from "mobx-react";
 
+
 interface ISupportItemProps{
   SupportItemStore?: any,
 }
@@ -70,7 +71,7 @@ class SupportItem extends React.Component<ISupportItemProps> {
       render: (record:any) => (
         <Space size="middle">
           {/* <Button onClick={() => history.push(`/SupportItemDetail/${record.id}`)} style={{marginRight: '10px'}}>Detail</Button> */}
-          <Button style={{marginRight: '10px'}}>Detail</Button> 
+          <Button style={{marginRight: '10px'}} type="link">Detail</Button> 
         </Space>
       )
     })
@@ -92,6 +93,7 @@ class SupportItem extends React.Component<ISupportItemProps> {
         <Button onClick={this.getSupportItemList}>Search</Button>
         <Table columns={columns}
             rowKey='price_guide_effective_id'
+            size="middle"
             pagination={{current: SupportItemStore.page, pageSize: SupportItemStore.page_size, total: SupportItemStore.total}}
             dataSource={SupportItemStore.models.supportItemList}
             loading={SupportItemStore.models.isLoading}

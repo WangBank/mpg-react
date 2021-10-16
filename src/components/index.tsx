@@ -33,9 +33,6 @@ class View extends Component{
         </Switch>
         </Switch>
       </Router>
-      
-
-      
       </>
     )
   }

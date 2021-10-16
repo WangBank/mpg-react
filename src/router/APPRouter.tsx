@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import Dashboard from "../pages/admin-portal/dashboard";
+import Staff from "../pages/admin-portal/staff/staff";
 import SupportItem from "../pages/admin-portal/support-items/support-item";
 import Login from "../pages/login";
 
@@ -18,6 +19,12 @@ export const router:IRouter[]=[
     title:'support-items', 
     key:'support-items',
     component:<SupportItem></SupportItem>
+  },
+  {
+    path:'/admin/staff',
+    title:'staff', 
+    key:'staff',
+    component:<Staff></Staff>
   },
   {
     path:'/admin/dashboard',
