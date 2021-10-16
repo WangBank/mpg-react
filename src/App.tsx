@@ -1,14 +1,14 @@
 import './App.css';
-import SupportItem from './pages/admin-portal/support-items/support-item';
+import React from 'react';
+import View from './components/index'
 
 function App() {
   return (
     <div>
-  {/* <Login></Login> */}
-    <SupportItem></SupportItem>
+      <View/>
     </div>
-  
-  );
+   
+  )
 }
 
 export default App;

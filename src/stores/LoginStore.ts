@@ -1,6 +1,6 @@
 import {observable,action,runInAction} from 'mobx'
 import { message } from 'antd';
-import BaseStore from '../../BaseStore';
+import BaseStore from './BaseStore';
 
 export default class SupportItemStore{
   baseStore;
@@ -9,34 +9,30 @@ export default class SupportItemStore{
   }
 
   models = observable({
-    supportItemList: [],
-    isLoading: false,
+    userinfo:null,
+    isLoading:false,
   });
 
-  @observable page = 1;
-  @observable page_size = 25;
-  @observable total = 0;
-  @observable error = '';
+  @observable username = '';
+  @observable password = '';
+  @observable error = [];
+  @observable is_remember = false;
   @action
-  getSupportItemList = (setcolumns:any) => {
+  signin = () => {
     this.models.isLoading = true;
     const opt = {
-      page: this.page,
-      page_size: this.page_size,
+      username: this.username,
+      password: this.password,
+      is_remember:this.is_remember
     }
     this.baseStore.SupportItemService.getSupportItemList(opt).then((res)=>{
       this.models.isLoading = false;
       if(res.ok) {
         runInAction(() => {
-          this.models.supportItemList = res.data.data;
-          this.total = res.data.total;
-          if (setcolumns !== null) {
-            if (res.data.data && res.data.data.length !== 0) {
-              setcolumns(res.data.data);
-            }
- 
+          this.models.userinfo = res.data;
+          if(res.ok){
+            
           }
-         
         });
       }
       else {
@@ -58,10 +54,5 @@ export default class SupportItemStore{
     });
   }
 
-  @action
-  updatePage = (page:number) => {
-    this.page = page;
-    this.getSupportItemList(null);
-  }
 
 }

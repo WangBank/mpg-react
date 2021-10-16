@@ -1,8 +1,6 @@
 import { Table, Button, Space } from 'antd';
 import React from 'react';
-import { withRouter } from "react-router";
 import { observer, inject } from "mobx-react";
-import moment from "moment";
 
 interface ISupportItemProps{
   SupportItemStore?: any,
@@ -38,7 +36,7 @@ class SupportItem extends React.Component<ISupportItemProps> {
       dataIndex: 'quote_name',
       key: 'quote_name',
     })
-    if (activecolumns != null) {
+    if (activecolumns !== null) {
       activecolumns[0].state_price_list.forEach((element: any) => {
         columns.push({
           title: element.price_guide_short_name,
@@ -47,7 +45,7 @@ class SupportItem extends React.Component<ISupportItemProps> {
           width:10,
           render:
             (prices: any[]) => {
-            let nowprice = prices.filter(p => p.price_guide_short_name == element.price_guide_short_name)[0];
+            let nowprice = prices.filter(p => p.price_guide_short_name === element.price_guide_short_name)[0];
              return <span key={nowprice.price_guide_effective_id}>{nowprice.price==null?nowprice.price_string:nowprice.price}</span>
             }
         })
@@ -81,10 +79,10 @@ class SupportItem extends React.Component<ISupportItemProps> {
     this.props.SupportItemStore.getSupportItemList(this.setColumns);
   }
 
-  constructor(props: any) {
-    super(props)
+  componentDidMount(){
+    this.getSupportItemList();
   }
-  
+
   render() {
    
     const { SupportItemStore } = this.props;

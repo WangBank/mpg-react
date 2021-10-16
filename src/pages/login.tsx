@@ -17,7 +17,7 @@ const Login = () => {
       onFinish={onFinish}
       >
     <div className="signin-logo">
-      <img src={signinImg}></img>
+      <img src={signinImg} alt=''></img>
       </div>
       <Form.Item
         name="username"
