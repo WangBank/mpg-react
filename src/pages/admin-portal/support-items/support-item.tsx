@@ -71,7 +71,7 @@ class SupportItem extends React.Component<ISupportItemProps> {
       render: (record:any) => (
         <Space size="middle">
           {/* <Button onClick={() => history.push(`/SupportItemDetail/${record.id}`)} style={{marginRight: '10px'}}>Detail</Button> */}
-          <Button style={{marginRight: '10px'}} type="link">Detail</Button> 
+          <a href="##" >Detail</a> 
         </Space>
       )
     })
@@ -90,7 +90,7 @@ class SupportItem extends React.Component<ISupportItemProps> {
 
     return (
       <div>
-        <Button onClick={this.getSupportItemList}>Search</Button>
+        <Button type='primary' onClick={this.getSupportItemList}>Search</Button>
         <Table columns={columns}
             rowKey='price_guide_effective_id'
             size="middle"

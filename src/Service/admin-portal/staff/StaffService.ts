@@ -7,5 +7,5 @@ export default class StaffService extends ServiceBase{
     this.BaseStore = BaseStore;
   }
 
-  getStaffList= (params:any)=>this.get(`admin/NDISStaff/List?Page=${params.page}&PageSize=${params.page_size}`, '', { stack: this.generateStackTrace('getStaffList') });
+  getStaffList= (params:any)=>this.get(`admin/staff/list?Page=${params.page}&PageSize=${params.page_size}`, '', { stack: this.generateStackTrace('getStaffList') });
 }
