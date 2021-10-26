@@ -6,9 +6,10 @@ import { Provider as StoreProvider, observer } from 'mobx-react';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import BaseStore from './stores/BaseStore';
+import { BaseSettings } from './models/BaseModel';
 
 const config = {
-  BaseAPIURL:'https://staging.mapleplan.com.au:8083/api/'
+  BaseAPIURL:BaseSettings.BaseAPIURL
 };
 const rootStore = new BaseStore(config);
 

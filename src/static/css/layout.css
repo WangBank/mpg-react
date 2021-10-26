@@ -21,7 +21,8 @@
   line-height: 64px;
   background: #fff;
 }
+
 .userFeatures{
   float: right;
-  order: 999;
+  order: 5;
 }

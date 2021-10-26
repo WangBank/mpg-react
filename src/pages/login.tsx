@@ -1,4 +1,4 @@
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button,Spin } from 'antd';
 import React from 'react';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import '../static/css/login.css'
@@ -21,6 +21,7 @@ class Login extends React.Component<ILoginProps> {
   render() {
     return (
       <div className="login-bg">
+      <Spin spinning={this.props.LoginStore.models.isLoading} tip="Loading...">
          <Form
         name="normal_login"
         className="login-form"
@@ -28,6 +29,7 @@ class Login extends React.Component<ILoginProps> {
         onFinish={this.signin}
         >
       <div className="signin-logo">
+    
         <img src={signinImg} alt=''></img>
         </div>
         <Form.Item
@@ -52,6 +54,7 @@ class Login extends React.Component<ILoginProps> {
           </Button>
         </Form.Item>
       </Form>
+      </Spin>
       </div>
      
     );

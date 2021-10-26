@@ -1,6 +1,6 @@
 
 import fetch from 'axios';
-import {LocalStorageModel} from '../models/BaseModel'
+import {BaseSettings, LocalStorageModel} from '../models/BaseModel'
 
 export default class ServiceBase {
   baseURL;
@@ -81,6 +81,7 @@ export default class ServiceBase {
 
   static handleError(base:string, urlPart:string, refParams:any, data:any, e:any, method:string, stack:any) {
     const statusCode = (e.response && e.response.status) || 0;
+    console.log(statusCode)
     const host = () => {
       try {
         const url = window.location.href;
@@ -90,7 +91,7 @@ export default class ServiceBase {
           return host
         }
       } catch (err) {
-        return "http://localhost:3000";
+        return BaseSettings.CurrentUrl;
       }
     }
     if (parseInt(statusCode,10) === 401) {

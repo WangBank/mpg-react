@@ -93,8 +93,8 @@ class Staff extends React.Component<IStaffProps> {
             render = {
               (record:any) => (
               <Space size="middle">
-                <a href='##' onClick={this.editStaff}>Details</a>
-                <a href='##' onClick={this.deleteStaff}>Delete</a>
+                <a href='#' onClick={this.editStaff}>Details</a>
+                <a href='#' onClick={this.deleteStaff}>Delete</a>
               </Space>
               )
             }

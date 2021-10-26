@@ -4,6 +4,7 @@ import { Link,withRouter,RouteComponentProps } from 'react-router-dom';
 import '../static/css/layout.css'
 import React from 'react';
 import { RouteInfo_Settings,RouteInfo_Dashboard } from '../models/RouteConfig';
+import { BaseSettings, LocalStorageModel } from '../models/BaseModel';
 
 const { Header, Content, Sider } = Layout;
 
@@ -106,6 +107,12 @@ class AdminLayout extends React.Component<IAdminLayout>{
   this.changeMenuByUrl(path);
 }
 
+logout=()=>{
+  localStorage.removeItem(LocalStorageModel.Token)
+  window.location.href = `${BaseSettings.CurrentUrl}/login`;
+   
+}
+
  
 
   render(){
@@ -117,9 +124,10 @@ class AdminLayout extends React.Component<IAdminLayout>{
       <Menu theme="light" mode="horizontal" onClick={this.handleClick} selectedKeys={[current]} defaultSelectedKeys={[RouteInfo_Dashboard.MenuInfo]}>
         <Menu.Item key={RouteInfo_Dashboard.MenuInfo}>{RouteInfo_Dashboard.MenuInfo}</Menu.Item>
         <Menu.Item key={RouteInfo_Settings.MenuInfo}>{RouteInfo_Settings.MenuInfo}</Menu.Item>
-        <div className="userFeatures"><PoweroffOutlined/></div>
       </Menu>
-      
+      <div style={{float:'right'}} onClick={this.logout.bind(this)} key="logout">
+        <PoweroffOutlined/>
+      </div>
      
     </Header>
     <Layout>

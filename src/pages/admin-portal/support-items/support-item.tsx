@@ -71,7 +71,7 @@ class SupportItem extends React.Component<ISupportItemProps> {
       render: (record:any) => (
         <Space size="middle">
           {/* <Button onClick={() => history.push(`/SupportItemDetail/${record.id}`)} style={{marginRight: '10px'}}>Detail</Button> */}
-          <a href="##" >Detail</a> 
+          <a href="#" >Detail</a> 
         </Space>
       )
     })
