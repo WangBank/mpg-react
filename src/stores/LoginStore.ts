@@ -1,7 +1,7 @@
 import {observable,action,runInAction} from 'mobx'
 import { message } from 'antd';
 import BaseStore from './BaseStore';
-import { LocalStorageModel } from '../models/BaseModel';
+import { BaseSettings, LocalStorageModel } from '../models/BaseModel';
 
 export default class LoginStore{
   baseStore;
@@ -31,6 +31,7 @@ export default class LoginStore{
           if(res.ok){
             this.models.userinfo = res.data.user_info;
             this.baseStore.ServiceBase.setData(LocalStorageModel.Token,res.data.access_token)
+            this.baseStore.ServiceBase.setData(LocalStorageModel.UserName,res.data.user_info.display_name)
             window.location.href='/'
           }
         });
@@ -54,5 +55,31 @@ export default class LoginStore{
     });
   }
 
-
+  @action
+  active = ()=>{
+    this.models.isLoading = true;
+    this.baseStore.LoginService.active({}).then((res)=>{
+      this.models.isLoading = false;
+      if(!res.ok) {
+        runInAction(() => {
+            localStorage.clear()
+            window.location.href = `${BaseSettings.CurrentUrl}/login`;
+        });
+      }
+      else {
+      }
+    }).catch((res) => {
+      if(res.response&&res.response.data&&res.response.data.errors) {
+        message.error(res.response.data.errors[0].message);
+        runInAction(() => {
+            this.error = res.response.data.errors;  
+            localStorage.clear()
+            window.location.href = `${BaseSettings.CurrentUrl}/login`;
+        });
+      }
+      this.models.isLoading = false;
+    }).finally(() => {
+      this.models.isLoading = false;
+    });
+  }
 }

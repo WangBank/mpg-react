@@ -1,5 +1,6 @@
 export const LocalStorageModel = {
-    Token:'Token'
+    Token:'Token',
+    UserName:'UserName',
 }
 
 export const BaseSettings = {

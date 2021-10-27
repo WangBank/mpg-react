@@ -52,6 +52,7 @@ export default class ServiceBase {
       );
   }
 
+
   getConfig(url:string, params:any, config:any) {
     const innerConfig = config || {};
     let { baseURL } = this;
