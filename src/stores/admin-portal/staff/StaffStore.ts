@@ -11,6 +11,8 @@ export default class StaffStore{
   models = observable({
     StaffList: [],
     isLoading: false,
+    showAddForm:false,
+
   });
 
   @observable page = 1;
@@ -62,6 +64,16 @@ export default class StaffStore{
   updatePage = (page:number) => {
     this.page = page;
     this.getStaffList(null);
+  }
+
+  @action
+  Cancel=()=>{
+    this.models.showAddForm = false;
+  }
+
+  @action
+  Create=(staffCreateInfo:any)=>{
+    console.log('staffCreateInfo',staffCreateInfo)
   }
 
 }

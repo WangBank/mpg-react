@@ -1,4 +1,4 @@
-import { Table, Button, Space } from 'antd';
+import { Table, Button, Space,Modal, Form, Input, Radio } from 'antd';
 import React from 'react';
 import { observer, inject } from "mobx-react";
 
@@ -15,7 +15,7 @@ class Staff extends React.Component<IStaffProps> {
   }
 
   addStaff= ()=>{
-
+    this.props.StaffStore.models.showAddForm = true;
   }
 
   editStaff= ()=>{
@@ -29,6 +29,7 @@ class Staff extends React.Component<IStaffProps> {
   componentDidMount(){
     this.getStaffList();
   }
+  
 
   render() {
    
@@ -101,9 +102,106 @@ class Staff extends React.Component<IStaffProps> {
             />
            
           </Table>
+
+          <StaffAddForm
+            visible={StaffStore.models.showAddForm}
+            onCreate={StaffStore.Create}
+            onCancel={StaffStore.Cancel}
+          >
+
+          </StaffAddForm>
       </div>
     );
   }
+
 }
+
+interface Values {
+  title: string;
+  description: string;
+  modifier: string;
+}
+
+interface StaffAddFormProps {
+  visible: boolean;
+  onCreate: (values: Values) => void;
+  onCancel: () => void;
+}
+
+
+const StaffAddForm: React.FC<StaffAddFormProps> = ({
+  visible,
+  onCreate,
+  onCancel,
+}) => {
+  const [form] = Form.useForm();
+  return (
+    <Modal
+      visible={visible}
+      title="Add staff"
+      okText="Create"
+      cancelText="Cancel"
+      onCancel={onCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then(values => {
+            form.resetFields();
+            onCreate(values);
+          })
+          .catch(info => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        name="form_in_modal"
+        initialValues={{ modifier: 'public' }}
+      >
+        <Form.Item
+          name="first_name"
+          label="First name"
+          rules={[{ required: true, message: 'Please input the first name of staff!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="last_name"
+          label="Last name"
+          rules={[{ required: true, message: 'Please input the last name of staff!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[{ required: true,type:'email', message: 'Please input the email of staff!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="phone"
+          label="Mobile Number"
+          rules={[{ required: true, message: 'Please input the phone of staff!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="status"
+          label="Staff Status"
+          rules={[{ required: true, message: 'Please select the status of staff!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item name="description" label="Description">
+          <Input type="textarea" />
+        </Form.Item>
+
+      </Form>
+    </Modal>
+  );
+};
 
 export default Staff

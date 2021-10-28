@@ -124,7 +124,7 @@ logout=()=>{
       <Menu  theme="light" mode="horizontal" onClick={this.handleClick} selectedKeys={[current]} defaultSelectedKeys={[RouteInfo_Dashboard.MenuInfo]}>
         <Menu.Item key={RouteInfo_Dashboard.MenuInfo}>{RouteInfo_Dashboard.MenuInfo}</Menu.Item>
         <Menu.Item key={RouteInfo_Settings.MenuInfo}>{RouteInfo_Settings.MenuInfo}</Menu.Item>
-        <Menu.Item key="logout" style={{padding:'0 0 0 85%'}} onClick={this.logout.bind(this)}> <PoweroffOutlined></PoweroffOutlined></Menu.Item>
+        <Menu.Item key="logout" style={{padding:'0 0 0 80%'}} onClick={this.logout.bind(this)}> <PoweroffOutlined></PoweroffOutlined></Menu.Item>
         <Menu.Item key="username"><h5>{localStorage.getItem(LocalStorageModel.UserName)}</h5></Menu.Item>
       </Menu>
     </Header>
