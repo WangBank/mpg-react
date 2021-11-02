@@ -1,4 +1,4 @@
-import { Table, Button, Space,Modal, Form, Input, Radio } from 'antd';
+import { Table, Button, Space,Modal, Form, Input, Row, Col,Select } from 'antd';
 import React from 'react';
 import { observer, inject } from "mobx-react";
 
@@ -107,6 +107,7 @@ class Staff extends React.Component<IStaffProps> {
             visible={StaffStore.models.showAddForm}
             onCreate={StaffStore.Create}
             onCancel={StaffStore.Cancel}
+            States={StaffStore.models.States}
           >
 
           </StaffAddForm>
@@ -126,6 +127,7 @@ interface StaffAddFormProps {
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
+  States:[];
 }
 
 
@@ -133,6 +135,7 @@ const StaffAddForm: React.FC<StaffAddFormProps> = ({
   visible,
   onCreate,
   onCancel,
+  States
 }) => {
   const [form] = Form.useForm();
   return (
@@ -142,6 +145,7 @@ const StaffAddForm: React.FC<StaffAddFormProps> = ({
       okText="Create"
       cancelText="Cancel"
       onCancel={onCancel}
+      width={window.innerWidth*0.75}
       onOk={() => {
         form
           .validateFields()
@@ -156,48 +160,155 @@ const StaffAddForm: React.FC<StaffAddFormProps> = ({
     >
       <Form
         form={form}
-        layout="vertical"
-        name="form_in_modal"
-        initialValues={{ modifier: 'public' }}
+        layout="horizontal"
+        name="staff_add_form"
+        size="small"
+        labelCol={{
+          style: { width: 120 }
+        }}
+    
       >
-        <Form.Item
-          name="first_name"
-          label="First name"
-          rules={[{ required: true, message: 'Please input the first name of staff!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
+        <Row gutter={16}>
+          <Col offset={2} span={8}> 
+            <Form.Item
+            name="first_name"
+            label="First name"
+            rules={[{ required: true, message: 'Please input the first name of staff!' }]}
+          >
+            <Input />
+          </Form.Item>
+          </Col>
+
+          <Col offset={4} span={8}> 
+            <Form.Item
+            name="street"
+            label="Street"
+            rules={[{ required: true, message: 'Please input the street of staff!' }]}
+          >
+            <Input />
+          </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col offset={2} span={8}> 
+          <Form.Item
           name="last_name"
           label="Last name"
           rules={[{ required: true, message: 'Please input the last name of staff!' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item
+          </Col>
+
+          <Col offset={4} span={8}> 
+            <Form.Item
+            name="suburb"
+            label="Suburb"
+            rules={[{ required: true, message: 'Please input the Suburb of staff!' }]}
+          >
+            <Input />
+          </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col offset={2} span={8}> 
+          <Form.Item
           name="email"
-          label="Email"
+          label="E-mail"
           rules={[{ required: true,type:'email', message: 'Please input the email of staff!' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item
+          </Col>
+
+          <Col offset={4} span={8}> 
+            <Form.Item
+            name="state"
+            label="State"
+            rules={[{ required: true, message: 'Please select the state of staff!' }]}
+          >
+          <Select
+           options={States}
+          />
+          </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col offset={2} span={8}> 
+          <Form.Item
           name="phone"
           label="Mobile Number"
-          rules={[{ required: true, message: 'Please input the phone of staff!' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          name="status"
-          label="Staff Status"
-          rules={[{ required: true, message: 'Please select the status of staff!' }]}
+          </Col>
+
+          <Col offset={4} span={8}> 
+          <Form.Item
+          name="postcode"
+          label="Post Code"
         >
           <Input />
         </Form.Item>
-        <Form.Item name="description" label="Description">
-          <Input type="textarea" />
+          </Col>
+        </Row>
+        
+        <Row gutter={16}>
+          <Col offset={2} span={20}> 
+          <Form.Item
+        
+            name="staff_statu"
+            label="Staff Status"
+            rules={[{ required: true, message: 'Please select the status of staff!' }]}
+          >
+            <Select>
+            <Select.Option value="demo">Demo</Select.Option>
+          </Select>
+          </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col offset={2} span={20}> 
+          <Form.Item name="view_states" label="View States">
+          <Select>
+            <Select.Option value="demo">Demo</Select.Option>
+          </Select>
         </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col offset={2} span={20}> 
+          <Form.Item name="group" label="Group">
+          <Select>
+            <Select.Option value="demo">Demo</Select.Option>
+          </Select>
+        </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col offset={2} span={20}> 
+          <Form.Item name="chart_cemplate" label="Chart Template">
+          <Select>
+            <Select.Option value="demo">Demo</Select.Option>
+          </Select>
+        </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col offset={2} span={20}> 
+          <Form.Item name="notes" label="Notes">
+          <Input.TextArea />
+        </Form.Item>
+          </Col>
+        </Row>
+        
+        
+       
 
       </Form>
     </Modal>

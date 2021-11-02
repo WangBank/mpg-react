@@ -12,7 +12,11 @@ export default class StaffStore{
     StaffList: [],
     isLoading: false,
     showAddForm:false,
-
+    States:[
+      {
+        key:'c70c84cf-147c-46e5-9c50-59326911312d',label:'ACT'
+      },
+    ]
   });
 
   @observable page = 1;
