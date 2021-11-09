@@ -1,6 +1,7 @@
 import StaffService from '../Service/admin-portal/staff/StaffService';
 import SupportItemService from '../Service/admin-portal/support-items/support-item';
 import LoginService from '../Service/audi/login-service';
+import CommonService from '../Service/common-service';
 import ServiceBase from '../utils/HttpClients';
 import StaffStore from './admin-portal/staff/StaffStore';
 import SupportItemStore from './admin-portal/support-items/SupportItemStore'
@@ -16,7 +17,7 @@ export default class BaseStore {
   LoginStore;
   StaffStore;
   StaffService;
-
+  CommonService;
 
   constructor(config:any) {
     this.config = config;
@@ -27,5 +28,6 @@ export default class BaseStore {
     this.SupportItemStore = new SupportItemStore(this);
     this.StaffService = new StaffService(this);
     this.StaffStore = new StaffStore(this);
+    this.CommonService = new CommonService(this);
   }
 }

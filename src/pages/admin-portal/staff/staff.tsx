@@ -1,6 +1,6 @@
 import { Table, Button, Space,Modal, Form, Input, Row, Col,Select } from 'antd';
 import React from 'react';
-import { observer, inject } from "mobx-react";
+import { observer, inject, useObserver } from "mobx-react";
 
 
 interface IStaffProps{
@@ -15,7 +15,12 @@ class Staff extends React.Component<IStaffProps> {
   }
 
   addStaff= ()=>{
-    this.props.StaffStore.models.showAddForm = true;
+    this.props.StaffStore.GetAddStaffSelectInfo();
+    // this.props.StaffStore.models.showAddForm = true;
+    setTimeout(() => {
+      this.props.StaffStore.models.showAddForm = true;
+    }, 1000);
+    
   }
 
   editStaff= ()=>{
@@ -107,7 +112,7 @@ class Staff extends React.Component<IStaffProps> {
             visible={StaffStore.models.showAddForm}
             onCreate={StaffStore.Create}
             onCancel={StaffStore.Cancel}
-            States={StaffStore.models.States}
+            SelectOptions={StaffStore.SelectOptions}
           >
 
           </StaffAddForm>
@@ -127,17 +132,23 @@ interface StaffAddFormProps {
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
-  States:[];
+  SelectOptions:{
+    States:[],
+    StaffStatus:[],
+    Group:[],
+    ChartTemplate:[],
+  };
 }
 
 
-const StaffAddForm: React.FC<StaffAddFormProps> = ({
+const StaffAddForm: React.FC<StaffAddFormProps> =  ( {
   visible,
   onCreate,
   onCancel,
-  States
+  SelectOptions,
 }) => {
   const [form] = Form.useForm();
+  const { Option } = Select;
   return (
     <Modal
       visible={visible}
@@ -229,9 +240,11 @@ const StaffAddForm: React.FC<StaffAddFormProps> = ({
             label="State"
             rules={[{ required: true, message: 'Please select the state of staff!' }]}
           >
-          <Select
-           options={States}
-          />
+          <Select>
+          { 
+           SelectOptions.States.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.label} title={d.label}>{d.label}</Option>))
+          }
+          </Select>
           </Form.Item>
           </Col>
         </Row>
@@ -260,12 +273,14 @@ const StaffAddForm: React.FC<StaffAddFormProps> = ({
           <Col offset={2} span={20}> 
           <Form.Item
         
-            name="staff_statu"
+            name="staff_status"
             label="Staff Status"
             rules={[{ required: true, message: 'Please select the status of staff!' }]}
           >
             <Select>
-            <Select.Option value="demo">Demo</Select.Option>
+          { 
+            SelectOptions.StaffStatus.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.label} title={d.label}>{d.label}</Option>))
+          }
           </Select>
           </Form.Item>
           </Col>
@@ -274,8 +289,9 @@ const StaffAddForm: React.FC<StaffAddFormProps> = ({
         <Row gutter={16}>
           <Col offset={2} span={20}> 
           <Form.Item name="view_states" label="View States">
-          <Select>
-            <Select.Option value="demo">Demo</Select.Option>
+         <Select>
+         <Option key="72beb2f8-b881-4035-9897-3aa04630cf4a" value="QLD" title="QLD">QLD</Option>
+         <Option key="5c36f5d9-6dc6-4eae-93a6-5726c7a16d0c" value="VIC" title="VIC">VIC</Option>
           </Select>
         </Form.Item>
           </Col>
@@ -285,16 +301,20 @@ const StaffAddForm: React.FC<StaffAddFormProps> = ({
           <Col offset={2} span={20}> 
           <Form.Item name="group" label="Group">
           <Select>
-            <Select.Option value="demo">Demo</Select.Option>
+          { 
+            SelectOptions.Group.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.label} title={d.label}>{d.label}</Option>))
+          }
           </Select>
         </Form.Item>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col offset={2} span={20}> 
-          <Form.Item name="chart_cemplate" label="Chart Template">
-          <Select>
-            <Select.Option value="demo">Demo</Select.Option>
+          <Form.Item name="chart_Template" label="Chart Template">
+           <Select>
+          { 
+            SelectOptions.ChartTemplate.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.label} title={d.label}>{d.label}</Option>))
+          }
           </Select>
         </Form.Item>
           </Col>
@@ -312,7 +332,7 @@ const StaffAddForm: React.FC<StaffAddFormProps> = ({
 
       </Form>
     </Modal>
-  );
+  )
 };
 
 export default Staff
