@@ -1,5 +1,5 @@
 import { Table, Button, Space,Modal, Form, Input, Row, Col,Select } from 'antd';
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { observer, inject, useObserver } from "mobx-react";
 
 
@@ -16,10 +16,10 @@ class Staff extends React.Component<IStaffProps> {
 
   addStaff= ()=>{
     this.props.StaffStore.GetAddStaffSelectInfo();
-    // this.props.StaffStore.models.showAddForm = true;
-    setTimeout(() => {
-      this.props.StaffStore.models.showAddForm = true;
-    }, 1000);
+    this.props.StaffStore.models.showAddForm = true;
+    // setTimeout(() => {
+    //   this.props.StaffStore.models.showAddForm = true;
+    // }, 1000);
     
   }
 
@@ -132,12 +132,7 @@ interface StaffAddFormProps {
   visible: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
-  SelectOptions:{
-    States:[],
-    StaffStatus:[],
-    Group:[],
-    ChartTemplate:[],
-  };
+  SelectOptions:any;
 }
 
 
@@ -148,7 +143,17 @@ const StaffAddForm: React.FC<StaffAddFormProps> =  ( {
   SelectOptions,
 }) => {
   const [form] = Form.useForm();
+  const [options,setOptions] = useState({
+    States:[],
+    StaffStatus:[],
+    Group:[],
+    ChartTemplate:[],
+  });
   const { Option } = Select;
+  useEffect(() => {
+    setOptions(SelectOptions);
+  });
+  
   return (
     <Modal
       visible={visible}
@@ -242,7 +247,7 @@ const StaffAddForm: React.FC<StaffAddFormProps> =  ( {
           >
           <Select>
           { 
-           SelectOptions.States.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.label} title={d.label}>{d.label}</Option>))
+           options.States.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.label} title={d.label}>{d.label}</Option>))
           }
           </Select>
           </Form.Item>
@@ -334,5 +339,7 @@ const StaffAddForm: React.FC<StaffAddFormProps> =  ( {
     </Modal>
   )
 };
+inject('StaffStore')(observer(StaffAddForm));
+
 
 export default Staff

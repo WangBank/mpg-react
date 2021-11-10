@@ -15,6 +15,7 @@ interface SelectOptionsForStaff{
   ChartTemplate:SelectOption[],
 }
 
+
 export default class StaffStore{
   baseStore;
   constructor(rootSt:BaseStore) {
@@ -27,16 +28,16 @@ export default class StaffStore{
     showAddForm:false,
   });
 
-  @observable SelectOptions:SelectOptionsForStaff={
+   SelectOptions:SelectOptionsForStaff= observable({
     States: [],
     StaffStatus: [],
     Group: [],
     ChartTemplate: []
-  };
+  });
 
 
   @observable page = 1;
-  @observable page_size = 25;
+  @observable page_size = 10;
   @observable total = 0;
   @observable error = '';
   @action
@@ -97,12 +98,18 @@ export default class StaffStore{
         runInAction(() => {
           let resultdata = res.data
           resultdata.map((element:any) => {
+            let v = []
+            v.push({
+              label:element.full_name,
+              key:element.id
+            })
             this.SelectOptions.States.push({
               label:element.full_name,
               key:element.id
             })
+            this.SelectOptions = {...this.SelectOptions,States:v}
           });
-
+          console.log("this.SelectOptions",this.SelectOptions)
         });
       }
       else {
