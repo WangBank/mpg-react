@@ -2,18 +2,8 @@ import {observable,action,runInAction} from 'mobx'
 import { message } from 'antd';
 import BaseStore from '../../BaseStore';
 import { DictionaryItemsType } from '../../../models/CommonModel';
+import { SelectOptionsForStaff, StaffAddData } from '../../../models/admin-portal/staff/StaffBaseModel';
 
-interface SelectOption{
-  key:string,
-  label:string,
-}
-
-interface SelectOptionsForStaff{
-  States:SelectOption[],
-  StaffStatus:SelectOption[],
-  Group:SelectOption[],
-  ChartTemplate:SelectOption[],
-}
 
 
 export default class StaffStore{
@@ -26,6 +16,10 @@ export default class StaffStore{
     StaffList: [],
     isLoading: false,
     showAddForm:false,
+    showUpdateForm:false,
+    StaffUpdateData:{
+      states:[]
+    },
   });
 
    SelectOptions:SelectOptionsForStaff= observable({
@@ -41,16 +35,17 @@ export default class StaffStore{
   @observable total = 0;
   @observable error = '';
   @action
-  getStaffList = () => {
+  getStaffList = async () => {
     this.models.isLoading = true;
     const opt = {
       page: this.page,
       page_size: this.page_size,
     }
-    this.baseStore.StaffService.getStaffList(opt).then((res:any)=>{
-      this.models.isLoading = false;
+    await this.baseStore.StaffService.getStaffList(opt).then((res:any)=>{
+    
       if(res.ok) {
         runInAction(() => {
+          this.models.isLoading = false;
           this.models.StaffList = res.data.data;
           this.total = res.data.total;
 
@@ -60,6 +55,7 @@ export default class StaffStore{
       else {
         message.error(res.errors[0].message);
         runInAction(() => {
+          this.models.isLoading = false;
           this.error = res.errors;
         });
       }
@@ -67,12 +63,15 @@ export default class StaffStore{
       if(res.response&&res.response.data&&res.response.data.errors) {
         message.error(res.response.data.errors[0].message);
         runInAction(() => {
+          this.models.isLoading = false;
             this.error = res.response.data.errors;  
         });
       }
-      this.models.isLoading = false;
     }).finally(() => {
-      this.models.isLoading = false;
+      runInAction(()=>{
+        this.models.isLoading = false;
+      })
+    
     });
   }
 
@@ -84,37 +83,34 @@ export default class StaffStore{
 
 
   @action
-  GetAddStaffSelectInfo =()=>{
-    this.models.isLoading = true;
+  GetAddStaffSelectInfo = async ()=>{
+   runInAction(() => {
+      this.models.isLoading = true;
+    });
     this.SelectOptions = {
       States: [],
       StaffStatus: [],
       Group: [],
       ChartTemplate: []
     }
-    this.baseStore.CommonService.getDictionaryItems({type:DictionaryItemsType.State,id:''}).then((res:any)=>{
-      this.models.isLoading = false;
+    await this.baseStore.CommonService.getDictionaryItems({type:DictionaryItemsType.State,id:''}).then((res:any)=>{
+     
       if(res.ok) {
         runInAction(() => {
+          this.models.isLoading = false;
           let resultdata = res.data
           resultdata.map((element:any) => {
-            let v = []
-            v.push({
-              label:element.full_name,
-              key:element.id
-            })
             this.SelectOptions.States.push({
               label:element.full_name,
               key:element.id
             })
-            this.SelectOptions = {...this.SelectOptions,States:v}
           });
-          console.log("this.SelectOptions",this.SelectOptions)
         });
       }
       else {
         message.error(res.errors[0].message);
         runInAction(() => {
+          this.models.isLoading = false;
           this.error = res.errors;
         });
       }
@@ -122,18 +118,22 @@ export default class StaffStore{
       if(res.response&&res.response.data&&res.response.data.errors) {
         message.error(res.response.data.errors[0].message);
         runInAction(() => {
+          this.models.isLoading = false;
             this.error = res.response.data.errors;  
         });
       }
-      this.models.isLoading = false;
+
     }).finally(() => {
-      this.models.isLoading = false;
+      runInAction(()=>{
+        this.models.isLoading = false;
+      })
     });
     
-    this.baseStore.CommonService.getDictionaryItems({type:DictionaryItemsType.Group,id:''}).then((res:any)=>{
-      this.models.isLoading = false;
+    await this.baseStore.CommonService.getDictionaryItems({type:DictionaryItemsType.Group,id:''}).then((res:any)=>{
+
       if(res.ok) {
         runInAction(() => {
+          this.models.isLoading = false;
           let resultdata = res.data
           resultdata.map((element:any) => {
             this.SelectOptions.Group.push({
@@ -147,6 +147,7 @@ export default class StaffStore{
       else {
         message.error(res.errors[0].message);
         runInAction(() => {
+          this.models.isLoading = false;
           this.error = res.errors;
         });
       }
@@ -154,18 +155,22 @@ export default class StaffStore{
       if(res.response&&res.response.data&&res.response.data.errors) {
         message.error(res.response.data.errors[0].message);
         runInAction(() => {
+          this.models.isLoading = false;
             this.error = res.response.data.errors;  
         });
       }
-      this.models.isLoading = false;
     }).finally(() => {
-      this.models.isLoading = false;
+      runInAction(()=>{
+        this.models.isLoading = false;
+      })
+
     });
 
-    this.baseStore.CommonService.getDictionaryItems({type:DictionaryItemsType.StaffStatusType,id:''}).then((res:any)=>{
-      this.models.isLoading = false;
+    await this.baseStore.CommonService.getDictionaryItems({type:DictionaryItemsType.StaffStatusType,id:''}).then((res:any)=>{
+   
       if(res.ok) {
         runInAction(() => {
+          this.models.isLoading = false;
           let resultdata = res.data
           resultdata.map((element:any) => {
             this.SelectOptions.StaffStatus.push({
@@ -179,6 +184,7 @@ export default class StaffStore{
       else {
         message.error(res.errors[0].message);
         runInAction(() => {
+          this.models.isLoading = false;
           this.error = res.errors;
         });
       }
@@ -186,19 +192,22 @@ export default class StaffStore{
       if(res.response&&res.response.data&&res.response.data.errors) {
         message.error(res.response.data.errors[0].message);
         runInAction(() => {
+          this.models.isLoading = false;
             this.error = res.response.data.errors;  
         });
       }
-      this.models.isLoading = false;
+
     }).finally(() => {
-      this.models.isLoading = false;
+      runInAction(()=>{
+        this.models.isLoading = false;
+      })
     });
 
 
-    this.baseStore.CommonService.getDictionaryItems({type:DictionaryItemsType.ChartTemplate,id:''}).then((res:any)=>{
-      this.models.isLoading = false;
+    await this.baseStore.CommonService.getDictionaryItems({type:DictionaryItemsType.ChartTemplate,id:''}).then((res:any)=>{
       if(res.ok) {
         runInAction(() => {
+          this.models.isLoading = false;
           let resultdata = res.data
           resultdata.map((element:any) => {
             this.SelectOptions.ChartTemplate.push({
@@ -212,6 +221,44 @@ export default class StaffStore{
       else {
         message.error(res.errors[0].message);
         runInAction(() => {
+          this.models.isLoading = false;
+          this.error = res.errors;
+        });
+      }
+    }).catch((res:any) => {
+      if(res.response&&res.response.data&&res.response.data.errors) {
+        message.error(res.response.data.errors[0].message);
+        runInAction(() => {
+          this.models.isLoading = false;
+            this.error = res.response.data.errors;  
+        });
+      }
+
+    }).finally(() => {
+      runInAction(()=>{
+        this.models.isLoading = false;
+      })
+    });
+  }
+
+  @action
+  GetStaffInfo = async (id:string) =>{
+    await this.GetAddStaffSelectInfo();
+
+    await this.baseStore.StaffService.getStaffDetails(id).then((res:any)=>{
+   
+      if(res.ok) {
+        runInAction(async () => {
+    
+          this.models.StaffUpdateData = res.data;
+          console.log(res.data)
+          this.models.showUpdateForm = true;
+        });
+      }
+      else {
+        message.error(res.errors[0].message);
+        runInAction(() => {
+
           this.error = res.errors;
         });
       }
@@ -222,9 +269,8 @@ export default class StaffStore{
             this.error = res.response.data.errors;  
         });
       }
-      this.models.isLoading = false;
+
     }).finally(() => {
-      this.models.isLoading = false;
     });
   }
 
@@ -232,12 +278,51 @@ export default class StaffStore{
 
   @action
   Cancel=()=>{
-    this.models.showAddForm = false;
+    runInAction(()=>{
+      this.models.showAddForm = false;
+      this.models.showUpdateForm = false;
+    })
   }
 
   @action
-  Create=(staffCreateInfo:any)=>{
+  Create= async (staffCreateInfo:StaffAddData)=>{
+    
     console.log('staffCreateInfo',staffCreateInfo)
+    runInAction(() => {
+      this.models.isLoading = true;
+    });
+
+    await this.baseStore.StaffService.addStaff(staffCreateInfo).then((res:any)=>{
+   
+      if(res.ok) {
+        runInAction(async () => {
+          this.models.isLoading = false;
+          this.models.showAddForm = false;
+          await this.getStaffList();
+        });
+      }
+      else {
+        message.error(res.errors[0].message);
+        runInAction(() => {
+          this.models.isLoading = false;
+          this.error = res.errors;
+        });
+      }
+    }).catch((res:any) => {
+      if(res.response&&res.response.data&&res.response.data.errors) {
+        message.error(res.response.data.errors[0].message);
+        runInAction(() => {
+          this.models.isLoading = false;
+            this.error = res.response.data.errors;  
+        });
+      }
+
+    }).finally(() => {
+      runInAction(()=>{
+        this.models.isLoading = false;
+      })
+    });
+
   }
 
 }

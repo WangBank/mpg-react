@@ -5,3 +5,8 @@ export const DictionaryItemsType = {
     ChartTemplate:'ChartTemplate',
 
 }
+
+export interface SelectOption{
+    key:string,
+    label:string,
+}
