@@ -2,7 +2,7 @@ import {observable,action,runInAction} from 'mobx'
 import { message } from 'antd';
 import BaseStore from '../../BaseStore';
 import { DictionaryItemsType } from '../../../models/CommonModel';
-import { SelectOptionsForStaff, StaffAddData } from '../../../models/admin-portal/staff/StaffBaseModel';
+import { SelectOptionsForStaff, StaffAddData, StaffUpdateData } from '../../../models/admin-portal/staff/StaffBaseModel';
 
 
 
@@ -15,8 +15,10 @@ export default class StaffStore{
   models = observable({
     StaffList: [],
     isLoading: false,
+    updateSuccess:false,
     showAddForm:false,
     showUpdateForm:false,
+    UpdateStaffErrorMsg:'',
     StaffUpdateData:{
       states:[]
     },
@@ -99,6 +101,7 @@ export default class StaffStore{
         runInAction(() => {
           this.models.isLoading = false;
           let resultdata = res.data
+          // eslint-disable-next-line
           resultdata.map((element:any) => {
             this.SelectOptions.States.push({
               label:element.full_name,
@@ -135,6 +138,7 @@ export default class StaffStore{
         runInAction(() => {
           this.models.isLoading = false;
           let resultdata = res.data
+          // eslint-disable-next-line
           resultdata.map((element:any) => {
             this.SelectOptions.Group.push({
               label:element.full_name,
@@ -172,6 +176,7 @@ export default class StaffStore{
         runInAction(() => {
           this.models.isLoading = false;
           let resultdata = res.data
+          // eslint-disable-next-line
           resultdata.map((element:any) => {
             this.SelectOptions.StaffStatus.push({
               label:element.full_name,
@@ -209,6 +214,7 @@ export default class StaffStore{
         runInAction(() => {
           this.models.isLoading = false;
           let resultdata = res.data
+          // eslint-disable-next-line
           resultdata.map((element:any) => {
             this.SelectOptions.ChartTemplate.push({
               label:element.full_name,
@@ -281,6 +287,8 @@ export default class StaffStore{
     runInAction(()=>{
       this.models.showAddForm = false;
       this.models.showUpdateForm = false;
+      this.models.updateSuccess = false;
+      this.models.UpdateStaffErrorMsg = '';
     })
   }
 
@@ -325,4 +333,81 @@ export default class StaffStore{
 
   }
 
+  @action
+  Update= async (staffUpdateInfo:StaffUpdateData)=>{
+    
+    console.log('staffUpdateInfo',staffUpdateInfo)
+    runInAction(() => {
+      this.models.isLoading = true;
+    });
+
+    await this.baseStore.StaffService.updateStaff(staffUpdateInfo).then((res:any)=>{
+   
+      if(res.ok) {
+        runInAction(async () => {
+          this.models.isLoading = false;
+          this.models.updateSuccess = true;
+          this.getStaffList();
+        });
+      }
+      else {
+       
+        runInAction(() => {
+          this.models.isLoading = false;
+        
+          this.models.UpdateStaffErrorMsg = res.errors[0].message
+        });
+      }
+    }).catch((res:any) => {
+      if(res.response&&res.response.data&&res.response.data.errors) {
+        runInAction(() => {
+          this.models.isLoading = false;
+            this.models.UpdateStaffErrorMsg = res.errors[0].message
+        });
+      }
+
+    }).finally(() => {
+      runInAction(()=>{
+        this.models.isLoading = false;
+      })
+    });
+
+  }
+
+  @action
+  DeleteStaff = (staffid:string)=>{
+    
+    runInAction(() => {
+      this.models.isLoading = true;
+    });
+
+     this.baseStore.StaffService.deleteStaff(staffid).then((res:any)=>{
+   
+      if(res.ok) {
+        runInAction(async () => {
+          this.models.isLoading = false;
+          this.getStaffList();
+        });
+      }
+      else {
+        message.error(res.response.data.errors[0].message);
+        runInAction(() => {
+          this.models.isLoading = false;
+        });
+      }
+    }).catch((res:any) => {
+      if(res.response&&res.response.data&&res.response.data.errors) {
+        message.error(res.response.data.errors[0].message);
+        runInAction(() => {
+          this.models.isLoading = false;
+        });
+      }
+
+    }).finally(() => {
+      runInAction(()=>{
+        this.models.isLoading = false;
+      })
+    });
+
+  }
 }

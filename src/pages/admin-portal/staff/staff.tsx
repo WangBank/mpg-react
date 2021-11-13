@@ -1,7 +1,7 @@
-import { Table, Button, Space, Modal, Form, Input, Row, Col, Select } from 'antd';
+import { Table, Button, Space, Modal, Form, Input, Row, Col, Select, Alert,Popconfirm } from 'antd';
 import React from 'react';
 import { observer, inject } from "mobx-react";
-import {  StaffAddFormProps, StaffUpdateFormProps } from '../../../models/admin-portal/staff/StaffBaseModel';
+import { StaffAddFormProps, StaffUpdateFormProps } from '../../../models/admin-portal/staff/StaffBaseModel';
 
 
 interface IStaffProps {
@@ -11,8 +11,8 @@ interface IStaffProps {
 @observer
 class Staff extends React.Component<IStaffProps> {
 
-  getStaffList = () => {
-    this.props.StaffStore.getStaffList();
+  getStaffList = async () => {
+   await this.props.StaffStore.getStaffList();
   }
 
   addStaff = async () => {
@@ -20,12 +20,12 @@ class Staff extends React.Component<IStaffProps> {
     this.props.StaffStore.models.showAddForm = true;
   }
 
-  updateStaff = async (id:string) => {
+  updateStaff = async (id: string) => {
     await this.props.StaffStore.GetStaffInfo(id);
   }
 
-  deleteStaff = () => {
-
+  deleteStaff = (id: string) => {
+     this.props.StaffStore.DeleteStaff(id);
   }
 
   componentDidMount() {
@@ -96,8 +96,17 @@ class Staff extends React.Component<IStaffProps> {
             render={
               (record: any) => (
                 <Space size="middle">
-                  <a href='#' onClick={()=>this.updateStaff(record.id)}>Details</a>
-                  <a href='#' onClick={this.deleteStaff}>Delete</a>
+                  {/*eslint-disable-next-line*/}
+                  <a href='#' onClick={() => this.updateStaff(record.id)}>Details</a>
+                  <Popconfirm
+                  title="Are you sure to delete this staff?"
+                  onConfirm={() => this.deleteStaff(record.id)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                {/*eslint-disable-next-line*/}
+                  <a href="#">Delete</a>
+                </Popconfirm>
                 </Space>
               )
             }
@@ -328,7 +337,7 @@ const StaffAddForm: React.FC<StaffAddFormProps> = ({
 };
 
 
-const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
+const StaffUpdateForm: React.FC<StaffUpdateFormProps> = ({
   visible,
   onUpdate,
   onCancel,
@@ -364,16 +373,38 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
         labelCol={{
           style: { width: 120 }
         }}
-
+        initialValues={{
+          first_name: StaffStore.models.StaffUpdateData.first_name,
+          street: StaffStore.models.StaffUpdateData.street,
+          last_name: StaffStore.models.StaffUpdateData.last_name,
+          suburb: StaffStore.models.StaffUpdateData.suburb,
+          email: StaffStore.models.StaffUpdateData.email,
+          state_id: StaffStore.models.StaffUpdateData.state_id,
+          phone: StaffStore.models.StaffUpdateData.phone,
+          postcode: StaffStore.models.StaffUpdateData.postcode,
+          status: '' + StaffStore.models.StaffUpdateData.status + '',
+          states_id: StaffStore.models.StaffUpdateData.states.map((s: any) => s.state_id),
+          group_ids: StaffStore.models.StaffUpdateData.groups,
+          chart_template_id: StaffStore.models.StaffUpdateData.chart_template_id,
+          notes: StaffStore.models.StaffUpdateData.notes,
+          id: StaffStore.models.StaffUpdateData.id,
+        }}
       >
         <Row gutter={16}>
           <Col offset={2} span={8}>
+
+            <Form.Item
+              name="id"
+              hidden={true}
+            >
+              <Input />
+            </Form.Item>
             <Form.Item
               name="first_name"
               label="First name"
               rules={[{ required: true, message: 'Please input the first name of staff!' }]}
             >
-              <Input defaultValue={StaffStore.models.StaffUpdateData.first_name}/>
+              <Input />
             </Form.Item>
           </Col>
 
@@ -383,7 +414,7 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
               label="Street"
               rules={[{ required: true, message: 'Please input the street of staff!' }]}
             >
-              <Input defaultValue={StaffStore.models.StaffUpdateData.street}/>
+              <Input />
             </Form.Item>
           </Col>
         </Row>
@@ -395,7 +426,7 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
               label="Last name"
               rules={[{ required: true, message: 'Please input the last name of staff!' }]}
             >
-              <Input defaultValue={StaffStore.models.StaffUpdateData.last_name}/>
+              <Input />
             </Form.Item>
           </Col>
 
@@ -405,7 +436,7 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
               label="Suburb"
               rules={[{ required: true, message: 'Please input the Suburb of staff!' }]}
             >
-              <Input defaultValue={StaffStore.models.StaffUpdateData.suburb}/>
+              <Input />
             </Form.Item>
           </Col>
         </Row>
@@ -417,7 +448,7 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
               label="E-mail"
               rules={[{ required: true, type: 'email', message: 'Please input the email of staff!' }]}
             >
-              <Input defaultValue={StaffStore.models.StaffUpdateData.email}/>
+              <Input />
             </Form.Item>
           </Col>
 
@@ -428,7 +459,6 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
               rules={[{ required: true, message: 'Please select the state of staff!' }]}
             >
               <Select
-              defaultValue={StaffStore.models.StaffUpdateData.state_id}
               >
                 {
                   StaffStore.SelectOptions.States.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.key} title={d.label}>{d.label}</Option>))
@@ -444,7 +474,7 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
               name="phone"
               label="Mobile Number"
             >
-              <Input  defaultValue={StaffStore.models.StaffUpdateData.phone}/>
+              <Input />
             </Form.Item>
           </Col>
 
@@ -453,7 +483,7 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
               name="postcode"
               label="Post Code"
             >
-              <Input defaultValue={StaffStore.models.StaffUpdateData.postcode}/>
+              <Input />
             </Form.Item>
           </Col>
         </Row>
@@ -467,7 +497,6 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
               rules={[{ required: true, message: 'Please select the status of staff!' }]}
             >
               <Select
-              defaultValue={''+StaffStore.models.StaffUpdateData.status+''}
               >
                 {
                   StaffStore.SelectOptions.StaffStatus.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.key} title={d.label}>{d.label}</Option>))
@@ -482,7 +511,6 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
             <Form.Item name="states_id" label="View States">
               <Select
                 mode="multiple"
-                defaultValue={StaffStore.models.StaffUpdateData.states.map((s:any)=>s.state_id)}
                 allowClear>
                 <Option key="72beb2f8-b881-4035-9897-3aa04630cf4a" value="72beb2f8-b881-4035-9897-3aa04630cf4a" title="QLD">QLD</Option>
                 <Option key="5c36f5d9-6dc6-4eae-93a6-5726c7a16d0c" value="5c36f5d9-6dc6-4eae-93a6-5726c7a16d0c" title="VIC">VIC</Option>
@@ -496,7 +524,7 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
             <Form.Item name="group_ids" label="Group">
               <Select
                 mode="multiple"
-                defaultValue={StaffStore.models.StaffUpdateData.groups}
+
                 allowClear>
                 {
                   StaffStore.SelectOptions.Group.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.key} title={d.label}>{d.label}</Option>))
@@ -509,7 +537,7 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
           <Col offset={2} span={20}>
             <Form.Item name="chart_template_id" label="Chart Template">
               <Select
-                defaultValue={StaffStore.models.StaffUpdateData.chart_template_id}
+
               >
                 {
                   StaffStore.SelectOptions.ChartTemplate.map((d: { key: string; label: string; }) => (<Option key={d.key} value={d.key} title={d.label}>{d.label}</Option>))
@@ -521,13 +549,17 @@ const StaffUpdateForm:React.FC<StaffUpdateFormProps> = ({
         <Row gutter={16}>
           <Col offset={2} span={20}>
             <Form.Item name="notes" label="Notes">
-              <Input.TextArea defaultValue={StaffStore.models.StaffUpdateData.notes}/>
+              <Input.TextArea />
             </Form.Item>
           </Col>
         </Row>
+        {
+          StaffStore.models.updateSuccess ? <Alert message="Update Staff Info Success" type="success" showIcon /> : ''
+        }
 
-
-
+        {
+          StaffStore.models.UpdateStaffErrorMsg && StaffStore.models.UpdateStaffErrorMsg !== '' && !StaffStore.models.updateSuccess ? <Alert message={StaffStore.models.UpdateStaffErrorMsg} type="error" showIcon /> : ''
+        }
 
       </Form>
     </Modal>

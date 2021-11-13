@@ -64,8 +64,9 @@ export interface StaffUpdateData {
   signature: string;
   state_id: string;
   state_name: string;
-  states: Array<StateInfo>
-  status: string;
+  states: Array<StateInfo>;
+  states_id: string[];
+  status: number;
   status_name: string;
   street: string;
   suburb: string;
