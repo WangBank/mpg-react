@@ -2,7 +2,7 @@ import {observable,action,runInAction} from 'mobx'
 import { message } from 'antd';
 import BaseStore from '../../BaseStore';
 import { DictionaryItemsType } from '../../../models/CommonModel';
-import { SelectOptionsForStaff, StaffAddData, StaffUpdateData } from '../../../models/admin-portal/staff/StaffBaseModel';
+import { SelectOptionsForStaff, StaffAddData, StaffSearchParams, StaffUpdateData } from '../../../models/admin-portal/staff/StaffBaseModel';
 
 
 
@@ -17,33 +17,41 @@ export default class StaffStore{
     isLoading: false,
     updateSuccess:false,
     showAddForm:false,
+    showSearch:false,
     showUpdateForm:false,
     UpdateStaffErrorMsg:'',
     StaffUpdateData:{
       states:[]
-    },
+    }
   });
 
-   SelectOptions:SelectOptionsForStaff= observable({
+  SelectOptions:SelectOptionsForStaff= observable({
     States: [],
     StaffStatus: [],
     Group: [],
     ChartTemplate: []
   });
+  searchParams:StaffSearchParams= observable({
+    id: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    state_id: '',
+    suburb: '',
+    street: '',
+    postcode: '',
+    page: 1,
+    page_size:10,
+  })
 
-
-  @observable page = 1;
-  @observable page_size = 10;
   @observable total = 0;
   @observable error = '';
   @action
   getStaffList = async () => {
     this.models.isLoading = true;
-    const opt = {
-      page: this.page,
-      page_size: this.page_size,
-    }
-    await this.baseStore.StaffService.getStaffList(opt).then((res:any)=>{
+    
+    await this.baseStore.StaffService.getStaffList(this.searchParams).then((res:any)=>{
     
       if(res.ok) {
         runInAction(() => {
@@ -79,7 +87,25 @@ export default class StaffStore{
 
   @action
   updatePage = (page:number) => {
-    this.page = page;
+    this.searchParams.page = page;
+    this.getStaffList();
+  }
+
+  @action
+  clearSearch = ()=>{
+    this.searchParams = {
+      id: '',
+      first_name: '',
+      last_name: '',
+      email:  '',
+      phone:  '',
+      state_id:  '',
+      suburb:  '',
+      street:  '',
+      postcode:  '',
+      page:1,
+      page_size:10,
+    }
     this.getStaffList();
   }
 

@@ -12,6 +12,7 @@ interface IStaffProps {
 class Staff extends React.Component<IStaffProps> {
 
   getStaffList = async () => {
+    console.log(this.props.StaffStore.searchParams)
    await this.props.StaffStore.getStaffList();
   }
 
@@ -19,6 +20,17 @@ class Staff extends React.Component<IStaffProps> {
     await this.props.StaffStore.GetAddStaffSelectInfo();
     this.props.StaffStore.models.showAddForm = true;
   }
+
+  showSearchSection = ()=>{
+    this.props.StaffStore.models.showSearch = true;
+  }
+  hiddenSearchSection= ()=>{
+    this.props.StaffStore.models.showSearch = false;
+  }
+  clearSearchSection=()=>{
+    this.props.StaffStore.clearSearch();
+  }
+
 
   updateStaff = async (id: string) => {
     await this.props.StaffStore.GetStaffInfo(id);
@@ -29,25 +41,105 @@ class Staff extends React.Component<IStaffProps> {
   }
 
   componentDidMount() {
+    this.props.StaffStore.models.showSearch = false;
+    this.props.StaffStore.clearSearch();
     this.getStaffList();
+  }
+
+  first_name_change(data:React.ChangeEvent<HTMLInputElement>){
+    this.props.StaffStore.searchParams.first_name = data.target.value;
+  }
+
+  last_name_change(data:React.ChangeEvent<HTMLInputElement>){
+    this.props.StaffStore.searchParams.last_name = data.target.value;
+  }
+
+  email_change(data:React.ChangeEvent<HTMLInputElement>){
+    this.props.StaffStore.searchParams.email = data.target.value;
+  }
+
+  phone_change(data:React.ChangeEvent<HTMLInputElement>){
+    this.props.StaffStore.searchParams.phone = data.target.value;
+  }
+
+  postcode_change(data:React.ChangeEvent<HTMLInputElement>){
+    this.props.StaffStore.searchParams.postcode = data.target.value;
+  }
+  status_change(data:any){
+    console.log(data)
+    this.props.StaffStore.searchParams.status = data;
   }
 
 
   render() {
 
     const { StaffStore } = this.props;
+    const { Option } = Select;
 
     return (
-      <div>
+      <>
+        {
+          this.props.StaffStore.models.showSearch ?( 
+          <>
+        <Row gutter={16} style={{padding: '8px 0'}}>
+          <Col span={8}>
+              <Input addonBefore="First Name" onChange={(event)=>this.first_name_change(event)} defaultValue={this.props.StaffStore.searchParams.first_name}/>
+          </Col>
+          <Col span={8}>
+            <Input addonBefore="Last Name"  onChange={(event)=>this.last_name_change(event)} defaultValue={this.props.StaffStore.searchParams.last_name}/>
+            </Col>
+            <Col span={8}>
+            <Input addonBefore="Email"  onChange={(event)=>this.email_change(event)} defaultValue={this.props.StaffStore.searchParams.email}/>
+            </Col>
+        </Row>
+
+        <Row gutter={16} style={{padding: '8px 0'}}>
+          <Col span={8}>
+          <Input addonBefore="Mobile Number" onChange={(event)=>this.phone_change(event)} defaultValue={this.props.StaffStore.searchParams.phone}/>
+          </Col>
+          <Col span={8}>
+          <Input addonBefore="Postcode"  onChange={(event)=>this.postcode_change(event)} defaultValue={this.props.StaffStore.searchParams.postcode}/>
+            </Col>
+            <Col span={8}>
+            <Select style={{width:"100%"}} placeholder="please select status" onChange={(event)=>this.status_change(event)} defaultValue={this.props.StaffStore.searchParams.status}>
+              <Option  key="0" value="0" title="Inactive">Inactive</Option>
+              <Option  key="1" value="1" title="Active">Active</Option>
+            </Select>
+            </Col>
+        </Row>
+
+        <Row gutter={24}>
+            <Col offset={16} span={8} >
+              <div style={{float:'right'}}>
+              <Button type='primary' size="middle" onClick={this.getStaffList}>Search</Button>
+              <Space/>
+            <Button type='default' size="middle" onClick={this.clearSearchSection}>Clear Filter</Button>
+            <Space/>
+            <Button type='default' size="middle" onClick={this.hiddenSearchSection}>Cancel</Button>
+              </div>
+            
+            </Col>
+        </Row>
+
+           
+
+           
+            </>
+            ):''
+        }
+       
         <Space size="middle">
+
           <Button type='primary' size="middle" onClick={this.addStaff}>Add</Button>
-          <Button type='default' size="middle" onClick={this.getStaffList}>Search</Button>
+          {
+            this.props.StaffStore.models.showSearch?'':(      <Button type='default' size="middle" onClick={this.showSearchSection}>Search</Button>)
+          }
         </Space>
 
         <Table
           rowKey='id'
           size="middle"
-          pagination={{ current: StaffStore.page, pageSize: StaffStore.page_size, total: StaffStore.total }}
+          pagination={{ current: StaffStore.searchParams.page, pageSize: StaffStore.searchParams.page_size, total: StaffStore.total }}
           dataSource={StaffStore.models.StaffList}
           loading={StaffStore.models.isLoading}
           rowClassName={(record, index) => {
@@ -131,7 +223,7 @@ class Staff extends React.Component<IStaffProps> {
         >
 
         </StaffUpdateForm>
-      </div>
+      </>
     );
   }
 

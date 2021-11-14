@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { RouteInfo_Dashboard,RouteInfo_Base,RouteInfo_Settings } from "../models/RouteConfig";
+import AdvanceFeatures from "../pages/admin-portal/advance-features/advance-features";
 import Dashboard from "../pages/admin-portal/dashboard";
 import Staff from "../pages/admin-portal/staff/staff";
 import SupportItem from "../pages/admin-portal/support-items/support-item";
@@ -26,6 +27,12 @@ export const router:IRouter[]=[
     title:'staff', 
     key:'staff',
     component:<Staff></Staff>
+  },
+  {
+    path:RouteInfo_Settings.AdvanceFeatures,
+    title:'advance-features', 
+    key:'advance-features',
+    component:<AdvanceFeatures></AdvanceFeatures>
   },
   {
     path:RouteInfo_Dashboard.Dashboard,

@@ -7,6 +7,22 @@ export interface SelectOptionsForStaff {
   ChartTemplate: SelectOption[],
 }
 
+
+export interface StaffSearchParams{
+    id: string;
+    first_name: string;
+    last_name: string;
+    status?: number;
+    email: string;
+    phone: string;
+    state_id: string;
+    suburb: string;
+    street: string;
+    postcode: string;
+    page: number;
+    page_size: number;
+}
+
 export interface StaffAddData {
   first_name: string;
   last_name: string;

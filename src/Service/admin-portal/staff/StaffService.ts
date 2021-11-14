@@ -1,4 +1,4 @@
-import { StaffAddData, StaffUpdateData } from '../../../models/admin-portal/staff/StaffBaseModel';
+import { StaffAddData, StaffSearchParams, StaffUpdateData } from '../../../models/admin-portal/staff/StaffBaseModel';
 import ServiceBase from '../../../utils/HttpClients';
  
 export default class StaffService extends ServiceBase{
@@ -8,7 +8,7 @@ export default class StaffService extends ServiceBase{
     this.BaseStore = BaseStore;
   }
 
-  getStaffList= (params:any)=>this.get(`admin/staff/list?Page=${params.page}&PageSize=${params.page_size}`, '', { stack: this.generateStackTrace('getStaffList') });
+  getStaffList= (params:StaffSearchParams)=>this.get(`admin/staff/list?Page=${params.page}&PageSize=${params.page_size}&id=${params.id}&first_name=${params.first_name}&last_name=${params.last_name}&status=${params.status}&email=${params.email}&phone=${params.phone}&state_id=${params.state_id}&suburb=${params.suburb}&street=${params.street}&postcode=${params.postcode}`, '', { stack: this.generateStackTrace('getStaffList') });
 
   addStaff= (data:StaffAddData)=>this.post(`admin/staff/add`, data, { stack: this.generateStackTrace('addStaff') });
 

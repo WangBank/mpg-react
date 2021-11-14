@@ -14,6 +14,7 @@ export const RouteInfo_Dashboard = {
 export const RouteInfo_Settings = {
     SupportItems:'/admin/support-items',
     Staffs:'/admin/staff',
+    AdvanceFeatures:'/admin/advance_features',
     DefaultValue:'/admin/staff',
     AllInfo:[
         '/admin/staff',
